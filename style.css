@@ -1,0 +1,8 @@
+.confetti {
+    position: absolute;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+    z-index: -9;
+    user-select: none;
+}
