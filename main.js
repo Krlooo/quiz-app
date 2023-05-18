@@ -217,7 +217,8 @@ const questList = document.querySelector("#questList");
 
 
 let pos = 0;
-
+let points = 0;
+let isAnswered = false;
 
 
 window.addEventListener("load", updateTitle(), printAnswers());
@@ -225,8 +226,15 @@ window.addEventListener("load", updateTitle(), printAnswers());
 
 
 function nextQuestion() {
-    if (!(pos == allQuestions.length - 1)) { pos++; } else { pos = 0; }
+    if (!(pos == allQuestions.length - 1)) { pos++; } else {
+        document.getElementById("results").classList.remove("hidden");
+        document.getElementById("questList").classList.add("hidden");
+        document.querySelector("#questTitle").innerText = "¡Quiz terminado!";
+        document.querySelector("#points").innerText = points;
+        return;
+    }
     clearAnswers(); updateTitle(); printAnswers();
+    isAnswered = false;
 }
 const clearAnswers = () => { questList.innerHTML = ""; }
 function printAnswers() {
@@ -245,13 +253,19 @@ function updateTitle() {
 }
 
 function checkAnswer(position) {
+    if (isAnswered == true) {
+        return;
+    }
+    isAnswered = true;
     const correctAnswerIndex = allQuestions[pos].answer.findIndex(answer => answer.isCorrect === true);
+    const botones = document.querySelectorAll("button[id]");
     btn = document.querySelector("#" + allQuestions[pos].answer[correctAnswerIndex].answer)
 
     const correctAnswer = () => {
         btn = document.querySelector("#" + allQuestions[pos].answer[position].answer)
         btn.classList.remove("bg-slate-200", "cursor-pointer", "hover:bg-gray-400");
         btn.className += " bg-green-400 cursor-default"
+        points += 100
     }
     if (allQuestions[pos].answer[position].isCorrect) {
         correctAnswer();
@@ -261,14 +275,22 @@ function checkAnswer(position) {
 
         btn.classList.remove("bg-slate-200", "cursor-pointer", "hover:bg-gray-400");
         btn.className += " bg-green-400 cursor-default "
-        btn.removeAttribute(onclick);
         btn = document.querySelector("#" + allQuestions[pos].answer[position].answer)
         btn.classList.remove("bg-slate-200", "cursor-pointer", "hover:bg-gray-400");
         btn.className += " bg-red-400 cursor-default"
     }
-    btn.removeAttribute(onclick);
+    botones.forEach((boton) => {
+        console.log(boton)
+        boton.classList.remove("cursor-pointer");
+        boton.classList.add("cursor-default");
+        boton.classList.remove("hover:bg-gray-400");
+    });
+
 
 }
+
+
+
 
 
 
